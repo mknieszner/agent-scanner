@@ -1,134 +1,134 @@
-# Agent Scanner
+# <img src="assets/agent-scanner-logo.svg" width="40" height="40" align="absmiddle" alt="" /> Agent Scanner
 
-**Improve the efficiency, cost control and safety of AI-assisted development with evidence from real agent sessions.**
+**Sprawdź, jak agenci AI pracują w Twoim projekcie, co zużywa najwięcej zasobów i gdzie warto wprowadzić usprawnienia.**
 
-[Open the browser demo](https://mknieszner.github.io/agent-scanner/) · **English** · [Polski](README.pl.md)
+[Otwórz demo w przeglądarce](https://mknieszner.github.io/agent-scanner/)
 
-## Executive summary
+## Do czego służy Agent Scanner
 
-Agent Scanner helps engineering teams turn AI adoption into a practice they can examine and improve. It supports five decisions: **where to improve efficiency, what to optimize, which data and actions need closer review, how repository configuration aligns with team standards, and which agent capabilities are actually being used.**
+Agent Scanner pomaga zespołom programistycznym ocenić, jak korzystają z agentów AI i co mogą poprawić w codziennej pracy. Łączy analizę **zapisanych sesji GitHub Copilot** z przeglądem **konfiguracji AI w repozytorium**: instrukcji, procedur dla agenta (skills), definicji agentów i narzędzi.
 
-It brings together two sources of evidence: **recorded GitHub Copilot sessions** and **repository AI configuration**. Session analysis reveals the captured course of work; configuration review documents the instructions, skills, agents and tools prepared for that work. Together, they give developers, technical leads and people responsible for AI adoption a concrete basis for choosing improvements.
+Programiści i liderzy techniczni mogą prześledzić poszczególne kroki pracy, sprawdzić zużycie zasobów i zobaczyć, które narzędzia i procedury są faktycznie używane. Osobom odpowiedzialnym za wdrażanie AI w zespole narzędzie dostarcza danych do oceny konfiguracji, sposobu pracy i potrzeb szkoleniowych.
 
-| Objective | Outcome Agent Scanner supports | Evidence to work with |
+| Obszar | W czym pomaga | Co można sprawdzić |
 |---|---|---|
-| **Increase efficiency** | Find repeated work and bottlenecks worth investigating; choose changes to task instructions, tools or delegation. | Model rounds, call durations, repeated tool calls, subagent activity and compaction. |
-| **Optimize consumption and costs** | Understand where tokens and Copilot AI credits are consumed and prioritize optimization experiments. | Main-agent, subagent and compaction balances; input, output, cache measurements and clearly marked estimates. |
-| **Strengthen security review** | Review the information and operations exposed to agents, and decide where tighter data or tool boundaries are needed. | Captured model requests, tool arguments and results, and repository declarations of instructions and MCP tools. |
-| **Review engineering standards** | Identify configuration gaps and prepare a shared baseline for working with agents. | An inventory of instructions, skills, agents, MCP, prompts and supported IDE settings, with source previews and a PDF report. |
-| **Assess AI adoption** | Distinguish configured capabilities from observed use, and identify areas for better configuration, guidance or training. | Session-level evidence of mechanisms available, passed to model requests and used, with explicit capture gaps. |
+| **Efektywność pracy** | Znajdowanie powtarzających się czynności i etapów, które zajmują najwięcej czasu. | Kolejne wywołania modelu, użycie narzędzi, zadania przekazane subagentom i czasy wykonania. |
+| **Optymalizacja kosztów** | Ustalenie, które operacje zużywają najwięcej zasobów i od czego zacząć optymalizację. | Tokeny wejściowe i wyjściowe, wykorzystanie pamięci podręcznej (cache) oraz GitHub Copilot AI credits. |
+| **Bezpieczeństwo** | Przegląd danych udostępnianych modelom i operacji zlecanych agentom. | Zapisane żądania do modelu, parametry i wyniki narzędzi, instrukcje oraz konfigurację MCP. |
+| **Standardy pracy** | Przegląd konfiguracji projektu pod kątem zasad przyjętych w zespole i brakujących elementów. | Instrukcje, skills, definicje agentów, MCP, prompty i obsługiwane ustawienia AI w edytorach, wraz z plikami źródłowymi. |
+| **Adopcja AI w zespole** | Sprawdzenie, które możliwości agenta są wykorzystywane, a które wymagają lepszej konfiguracji lub wdrożenia do codziennej pracy. | Możliwości dostępne w sesji, przekazane modelowi i faktycznie użyte — w zakresie widocznym w zapisanych danych. |
 
-Scanner supplies evidence for human decisions. Efficiency and consumption gains depend on the changes made and the tasks evaluated; its security view supports review of captured activity, without certifying compliance or performing a vulnerability audit.
+Scanner pomaga wybrać zmiany, których efekty warto sprawdzić na kolejnych zadaniach. Ich ocenę należy oprzeć zarówno na zużyciu zasobów, jak i jakości wykonanej pracy. Przegląd bezpieczeństwa obejmuje zarejestrowane dane i działania; nie zastępuje audytu podatności ani oceny zgodności.
 
-### Turn observations into improvements
+### Jak wykorzystać wyniki
 
-Review a representative session, identify a specific issue, and change one part of the working setup: an instruction, a skill description, a tool selection or a delegation pattern. Then record another comparable task and review its results, consumption and execution. Scanner makes the evidence available for that comparison; task quality and the value of any trade-off still require your assessment.
+Zacznij od sesji z typowym zadaniem zespołu. Znajdź krok wymagający poprawy i zmień jeden element: instrukcję, opis procedury, dobór narzędzi lub podział pracy między agentów. Następnie zarejestruj podobne zadanie i porównaj przebieg, zużycie zasobów oraz jakość rezultatu. W ten sposób łatwiej ocenić, czy zmiana przyniosła korzyść.
 
-## Explore the evidence
+## Analiza w przeglądarce
 
-Agent Scanner turns **GitHub Copilot OpenTelemetry session files** into interactive views of agent activity and inventories selected AI configuration files from repositories.
+Demo odczytuje **pliki sesji GitHub Copilot w formacie OpenTelemetry** i wybrane pliki konfiguracji AI repozytorium. Sesje można przeglądać w podsumowaniu, na osi czasu i na mapie pracy agenta.
 
-The public demo processes imported files in your browser. No backend setup or AI API key is required. The application interface is currently in Polish.
+Przetwarzanie odbywa się w przeglądarce. Do korzystania z demo nie trzeba uruchamiać serwera ani podawać klucza API do modelu AI. Interfejs aplikacji jest po polsku.
 
-<!-- SCREENSHOT 01: screenshots/session-workflow.png
-Hero: Mapa pracy / Workflow map, with main-agent rounds and a linked subagent.
-Use synthetic telemetry. Show one readable interaction with the Context or Tokens layer.
-Add the image here when available; do not publish a broken image link.
--->
+![Podsumowanie wykorzystania instrukcji, skills, agentów, MCP i narzędzi w sesji](screenshots/session-adoption.png)
 
-## Analyze agent sessions
+*Podsumowanie wskazuje użyte możliwości agenta oraz elementy konfiguracji wymagające uwagi.*
 
-### Follow the agent's work
+## Analiza sesji agenta
 
-The **Workflow map** connects model rounds, tool activity, related subagents and context compaction. Switch between context, token and credit layers, select an interaction, and open the evidence behind a round.
+### Przebieg pracy i zużycie zasobów
 
-The **Cost and execution** view combines a session balance with a timeline. Main-agent calls, linked subagents and compaction are accounted for separately, so a nested call is not counted twice. Model-call duration is kept separate from elapsed session time.
+**Mapa pracy** pokazuje kolejne wywołania modelu (rundy), użycie narzędzi i zadania przekazane subagentom. Uwzględnia także kompaktowanie, czyli skracanie kontekstu rozmowy przez podsumowanie wcześniejszej treści. Można przełączać widoki kontekstu, tokenów i credits, wybrać interakcję z użytkownikiem i otworzyć szczegóły rundy.
 
-<!-- SCREENSHOT 02: screenshots/session-cost-timeline.png
-Cost and execution: expanded balance plus a few rounds. Include the main agent,
-a subagent or compaction, and visible token/cache/credit columns.
--->
+![Mapa pracy z rundami głównego agenta, delegowaniem do subagenta i powrotem do odpowiedzi](screenshots/session-workflow.png)
 
-### Inspect the context and tools
+*Mapa pokazuje podział pracy między głównego agenta a subagenta oraz kolejność wywołań modeli.*
 
-Open a round to examine captured instructions, messages, model requests and responses, tool arguments and results. For compaction, inspect the request and summary; a before/after context comparison is shown only when later telemetry confirms that the summary was received.
+Widok **Koszt i przebieg** łączy zestawienie zużycia z osią czasu. Pokazuje osobno wywołania głównego agenta, powiązanych subagentów i kompaktowania. Suma sesji nie uwzględnia tych samych wywołań dwukrotnie. Czas pracy modeli jest prezentowany oddzielnie od czasu trwania całej sesji.
 
-The tools overview separates available definitions from observed use. Inspect definition versions and repeated calls with the same canonical arguments, and see which rounds contained them. This helps investigate context overhead and repeated work without treating every repetition as a mistake.
+![Zestawienie tokenów wejściowych i wyjściowych, cache, czasu modeli i Copilot AI credits](screenshots/session-cost-timeline.png)
 
-<!-- SCREENSHOT 03: screenshots/session-round-details.png
-Round details: a readable captured request or tool result next to its timeline.
-Optionally replace this with the tools overview and its repeated-call details.
--->
+*Zestawienie wyróżnia rundy o największym zużyciu i najdłuższym czasie wykonania.*
 
-### See which capabilities were actually used
+### Kontekst i narzędzia
 
-The **Summary** view surfaces evidence of repository instructions, skills, custom agents, MCP tools, subagents and compaction. It distinguishes mechanisms found in the captured context, definitions passed to model requests, and observed use. Missing capture remains visible rather than being treated as proof that a capability was absent.
+W szczegółach rundy można przejrzeć zapisane instrukcje i wiadomości, żądania wysłane do modelu, jego odpowiedzi oraz parametry i wyniki narzędzi. Dla kompaktowania dostępne są żądanie i wygenerowane podsumowanie. Porównanie kontekstu przed skróceniem i po nim pojawia się wtedy, gdy późniejsze dane potwierdzają, że model otrzymał podsumowanie.
 
-<!-- SCREENSHOT 04: screenshots/session-capabilities.png
-Summary: capability cards and expanded Available vs used rows, on the same synthetic session.
--->
+Zestawienie narzędzi rozróżnia ich dostępność i użycie. Pozwala przeglądać wersje definicji oraz znaleźć wywołania z tymi samymi wartościami parametrów. Wskazuje też rundy, w których wystąpiły. Ułatwia to ocenę, ile miejsca zajmują definicje narzędzi w kontekście i czy agent powtarza tę samą pracę. Samo powtórzenie nie musi oznaczać błędu.
 
-For deeper inspection, **Technical data** exposes a searchable list of spans, recorded attributes and raw telemetry. The original evidence remains available alongside the interpreted views.
+![Szczegóły rundy: zlecenie uruchomienia testów dla subagenta, parametry narzędzia, wynik i kontekst kolejnego wywołania modelu](screenshots/session-round-details.png)
 
-## Review repository configuration
+*Po lewej: zadanie zlecone subagentowi. Po prawej: wynik testów przekazany do kolejnej rundy oraz informacje o kontekście modelu.*
 
-Choose a local repository folder, or use **AI Agent Scanner Capture** from a GitLab repository page. The bookmarklet reads selected configuration files through that GitLab instance's REST API using your existing browser session, then transfers them to Scanner.
+### Wykorzystanie możliwości agenta
 
-- Browse instructions, skills, custom agents, MCP definitions, prompts and supported VS Code / JetBrains AI settings.
-- Preview captured configuration files and follow source links when repository metadata is available.
-- Keep snapshots locally and return to them later.
-- Generate a PDF with repository metadata, category navigation, configuration details, source excerpts and links.
+**Podsumowanie** pokazuje, które instrukcje repozytorium, skills, definicje agentów i narzędzia MCP znalazły się w zapisie sesji. Uwzględnia również pracę subagentów i kompaktowanie. Rozróżnia elementy dostępne w sesji, przekazane modelowi oraz użyte podczas pracy. Jeśli zapis jest niepełny, brak danych pozostaje widoczny — nie jest uznawany za dowód, że dana możliwość była niedostępna.
 
-Files merely linked from a configuration are listed as references; Scanner does not recursively download their contents. This is an inventory of selected AI configuration, not a whole-codebase audit. GitLab browser policies can restrict the bookmarklet.
+Zakładka **Dane techniczne** udostępnia przeszukiwalną listę spanów, czyli zapisów operacji w telemetrii, wraz z ich atrybutami i danymi źródłowymi. Pozwala sprawdzić, na jakich informacjach opiera się analiza.
 
-<!-- SCREENSHOT 05: screenshots/repository-report.png
-Repository report: instructions, skills and MCP, with one expanded configuration.
-Use the synthetic playground. Optional companion: screenshots/repository-pdf.png,
-showing the PDF cover and a detail page in a single image.
--->
+## Przegląd konfiguracji repozytorium
 
-## Try it with a Copilot session
+Możesz wybrać folder repozytorium z komputera lub zaimportować konfigurację z GitLaba. W drugim przypadku przeciągnij **AI Agent Scanner Capture** na pasek zakładek przeglądarki, a następnie uruchom tę zakładkę na stronie repozytorium. Zawarty w niej skrypt odczyta wybrane pliki konfiguracji, korzystając z Twojej sesji w GitLabie, i przekaże je do Scannera.
 
-1. [Open Agent Scanner](https://mknieszner.github.io/agent-scanner/).
-2. Copy the file-export configuration from the start screen into **VS Code User Settings (JSON)**. Set your own path in `github.copilot.chat.otel.outfile`, reload VS Code, and work with Copilot.
-3. Select **Wczytaj plik Copilot OTel JSONL** or the import icon beside **Sesje**. Choose the generated `.jsonl` or `.ndjson` file, up to **64 MiB**.
-4. Review the preview, select one or more main conversations, and confirm. Scanner includes their unambiguously linked subagents and supporting calls.
-5. Explore **Podsumowanie**, **Koszt i przebieg**, **Mapa pracy** and **Dane techniczne**.
+![Import konfiguracji z lokalnego folderu lub ze strony repozytorium w GitLabie](screenshots/repository-import.png)
 
-Detailed content views depend on what the exporter captured. Content capture can include source code, prompts and tool outputs; enable it only for material you intend to record.
+*Konfigurację można wczytać z komputera lub bezpośrednio z GitLaba.*
 
-The session importer supports **Copilot OTel JSONL**, not arbitrary OTLP files. Session export uses Scanner's own JSON format for inspection and sharing; that export cannot currently be re-imported through the Copilot JSONL importer. Keep the original JSONL if you need to import the session again.
+Raport pozwala:
 
-## Browser demo and full application
+- Przeglądać instrukcje, skills, definicje agentów, MCP, prompty oraz obsługiwane ustawienia AI w VS Code i środowiskach JetBrains.
+- Otwierać podgląd zapisanych plików i przechodzić do źródeł, jeśli dostępne są informacje o repozytorium potrzebne do utworzenia linku.
+- Zapisać migawkę konfiguracji i wrócić do niej później.
+- Pobrać PDF z informacjami o repozytorium, podziałem na kategorie, szczegółami konfiguracji, fragmentami plików i odnośnikami.
 
-| Capability | Public browser demo | Full application |
+Scanner pokazuje także odnośniki z konfiguracji do innych plików, ale nie pobiera dodatkowo ich treści. Zakres raportu obejmuje wybrane konfiguracje AI, a nie przegląd całego kodu. Ustawienia bezpieczeństwa przeglądarki lub GitLaba mogą ograniczyć działanie zakładki importującej.
+
+![Raport repozytorium z kategoriami instrukcji, skills, agentów, MCP, promptów i ustawień AI w IDE](screenshots/repository-report.png)
+
+*Raport porządkuje konfigurację według kategorii. Dane z sesji pozwalają później sprawdzić, które z tych elementów zostały użyte.*
+
+## Pierwsza analiza sesji
+
+1. [Otwórz Agent Scanner](https://mknieszner.github.io/agent-scanner/).
+2. Skopiuj konfigurację zapisu telemetrii ze strony startowej do ustawień użytkownika VS Code w formacie JSON (**User Settings (JSON)**). Ustaw ścieżkę pliku w `github.copilot.chat.otel.outfile`, przeładuj okno VS Code i wykonaj zadanie z Copilotem.
+3. W Scannerze wybierz **Wczytaj plik Copilot OTel JSONL** lub ikonę importu przy nagłówku **Sesje**. Wskaż utworzony plik `.jsonl` albo `.ndjson` o rozmiarze do **64 MiB**.
+4. Sprawdź podgląd, zaznacz rozmowy do importu i zatwierdź wybór. Scanner dołączy subagentów i wywołania pomocnicze, które można jednoznacznie powiązać z wybranymi rozmowami.
+5. Otwórz **Podsumowanie**, **Koszt i przebieg**, **Mapę pracy** i **Dane techniczne**.
+
+Zakres szczegółów zależy od ustawień zapisu telemetrii. Rejestrowanie treści może obejmować kod, polecenia użytkownika i wyniki narzędzi, dlatego włącz je dla materiału, który chcesz zapisać.
+
+Importer obsługuje pliki **Copilot OTel JSONL**; pozostałe formaty OTLP nie są obsługiwane. Eksport dostępny w Scannerze zapisuje sesję we własnym formacie JSON, przeznaczonym do przeglądania i udostępniania. Nie można go ponownie wczytać importerem sesji. Do ponownego importu zachowaj oryginalny plik JSONL z Copilota.
+
+## Demo w przeglądarce a pełna aplikacja
+
+| Funkcja | Publiczne demo w przeglądarce | Pełna aplikacja |
 |---|---|---|
-| Session-file import, timeline, workflow map, tools and raw evidence | Available locally | Available |
-| Repository inventory, local folder / GitLab capture and PDF | Available locally | Available |
-| Storage | This browser's IndexedDB | Local backend database |
-| Receiving telemetry through OTLP/HTTP | Not available | Available with a configured backend |
-| AI Hub: action classification, session chat and optimization advice | Not available | Explicitly invoked through configured Copilot integration |
-| AI assessment of repository configuration | Not available | Explicitly invoked after selecting inputs and a model |
+| Import plików sesji, oś czasu, mapa pracy, narzędzia i surowe dane | Dostępne lokalnie | Dostępne |
+| Przegląd konfiguracji repozytorium, import z folderu lub GitLaba i raport PDF | Dostępne lokalnie | Dostępne |
+| Przechowywanie danych | Lokalna baza przeglądarki (IndexedDB) | Lokalna baza aplikacji |
+| Odbieranie telemetrii przez OTLP/HTTP | Niedostępne | Dostępne po skonfigurowaniu serwera aplikacji |
+| AI Hub: klasyfikacja działań, rozmowa o sesji i zalecenia optymalizacyjne | Niedostępne | Uruchamiane przez użytkownika po skonfigurowaniu integracji z Copilotem |
+| Ocena konfiguracji repozytorium przez AI | Niedostępna | Uruchamiana przez użytkownika po wyborze danych i modelu |
 
-The public demo is useful without model inference. Full-application AI actions are separate from the deterministic session views and may send the selected material to Copilot. This repository publishes the demo distribution; it does not contain the full application's source or installation package.
+Demo analizuje zapisane dane bez wywoływania modeli AI. W pełnej aplikacji dodatkowe analizy AI uruchamia użytkownik; mogą one przekazywać wybrane dane do Copilota. To repozytorium udostępnia demo, bez kodu źródłowego i pakietu instalacyjnego pełnej wersji.
 
-## Reading the results
+## Jak czytać wyniki
 
-- **Measured values, calculations and estimates are distinct.** `≈` marks estimates; a missing measurement is not zero.
-- **Credits means GitHub Copilot AI credits.** It is not currency or a billing statement.
-- **Recorded evidence sets the limits.** Scanner does not reconstruct missing messages or hidden reasoning, and it is not an exact tokenizer.
-- **Telemetry is not a live connection to the IDE.** A session describes the data that was captured and imported; available tools do not prove execution, and a tool request does not by itself prove success.
+- **Pomiary są odróżniane od wyliczeń i szacunków.** Symbol `≈` oznacza wartość szacunkową. Brak pomiaru nie jest traktowany jak zero; podział tokenów między części treści nie jest dokładnym zliczeniem.
+- **Credits oznaczają GitHub Copilot AI credits.** Nie są kwotą w walucie, a zestawienie w Scannerze nie zastępuje rozliczenia dostawcy.
+- **Analiza obejmuje zapisane dane.** Scanner nie odtwarza brakujących wiadomości ani wewnętrznego rozumowania modelu, którego nie zapisano w telemetrii.
+- **Dostępność, zlecenie i wykonanie to różne informacje.** Samo udostępnienie narzędzia nie oznacza jego użycia, a żądanie wykonania nie potwierdza sukcesu. Demo pokazuje zaimportowany zapis sesji, bez połączenia na żywo z edytorem.
 
-## Data and privacy
+## Dane i prywatność
 
-In the demo, session parsing and analysis run locally, with work delegated to a browser worker and data saved in IndexedDB. Imported session and repository content is not uploaded to a Scanner backend or an AI service. Loading the app still contacts GitHub Pages, and GitLab capture makes authenticated requests to the GitLab instance you are browsing.
+W demo odczyt i analiza plików odbywają się lokalnie w przeglądarce, a dane są zapisywane w jej bazie IndexedDB. Wczytane sesje i pliki repozytorium nie są wysyłane na serwer Scannera ani do usługi AI. Połączenie z siecią jest potrzebne do pobrania aplikacji z GitHub Pages oraz do importu z GitLaba, który korzysta z Twojej aktywnej sesji w tej usłudze.
 
-Saved data belongs to this site address and browser profile. Clearing site data, browser storage eviction or switching profiles can make it unavailable. You can delete sessions and repository snapshots from the application.
+Dostęp do zapisanych danych zależy od adresu witryny i profilu przeglądarki. Wyczyszczenie danych witryny, automatyczne zwolnienie miejsca przez przeglądarkę lub zmiana profilu może spowodować utratę dostępu do zapisanych sesji. Sesje i migawki konfiguracji można też usuwać w aplikacji.
 
-Telemetry and exports may contain code, prompts, file paths, arguments and results. Recognized secrets in repository configuration are masked, but this is not a guarantee of anonymization. Review any JSON, PDF or screenshot before sharing it.
+Pliki telemetrii i eksporty mogą zawierać kod, polecenia użytkownika, ścieżki plików oraz parametry i wyniki narzędzi. Scanner maskuje rozpoznane sekrety w konfiguracji repozytorium, ale nie zapewnia pełnej anonimizacji. Przed udostępnieniem sprawdź zawartość pliku JSON, raportu PDF lub zrzutu ekranu.
 
-## About this repository
+## O tym repozytorium
 
-This is the **public distribution repository** for Agent Scanner. The `gh-pages` branch contains the static demo, this documentation and, when added, illustrative screenshots. Application source code is maintained separately in a private repository.
+To **publiczne repozytorium demo** Agent Scanner. Gałąź `gh-pages` zawiera pliki aplikacji, ten opis i zrzuty ekranu. Kod źródłowy jest rozwijany w osobnym, prywatnym repozytorium.
 
-[Launch Agent Scanner](https://mknieszner.github.io/agent-scanner/)
+[Uruchom Agent Scanner](https://mknieszner.github.io/agent-scanner/)
