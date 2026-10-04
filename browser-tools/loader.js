@@ -116,6 +116,7 @@
   --panel-padding: var(--space-8);
   --motion-fast: 160ms;
   --motion-normal: 240ms;
+  --motion-pulse: 3600ms;
   --ease-standard: cubic-bezier(.2, .8, .2, 1);
   --z-toolbar: 20;
   --z-aside: 1000;
